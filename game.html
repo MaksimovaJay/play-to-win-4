@@ -12,6 +12,10 @@
         hitPoints: 25,
         armorClass: 12,
         attackBonus: 5,
+        magicSlots:  {
+            name:'2 - Волшебная стрела',
+            quantity: 2
+        },
         getStatus: function () {
             return console.log(`\`⚔️powerful MJay : ${Hero.hitPoints} HP`)
         },
@@ -25,6 +29,9 @@
             } else {
                 console.log(`💀 MJay уже мертв.`);
             }
+        },
+        getMagicMissileDamage: function () {
+            return Dice.d4() + Dice.d4() + Dice.d4() + 3
         }
     };
     const Enemy = {
@@ -78,7 +85,7 @@
         } else {
             console.log(`MJay не попал ❌ по противнику`)
         }
-        return false
+        return true
     }
 
     const gameplayMaZaHaKeR = () => {
@@ -102,14 +109,55 @@
     }
 
 
+
     while (true) {
-         const userСhoice = prompt(`Выберите что герой будет делать`)
-        console.log(' -----\nХод противника MJay\n -----')
-        if (gameplayMJay()) break
-        console.log(' -----\nХод противника MaZaHaKeR\n -----')
-        if (gameplayMaZaHaKeR()) break
-        console.log('================================')
+        let userChoice;
+
+        do {
+            userChoice = prompt(`Выберите действие героя:\n1 - Атаковать\n${Hero.magicSlots ? Hero.magicSlots.name : 'Волшебная стрела (заклинания закончились)'}\n3 - Слушать барда\n4 - Убежать\n\nУкажи цифру:`);
+
+            if (userChoice !== '1' && userChoice !== '2' && userChoice !== '3' && userChoice !== '4') {
+                console.log('Некорректный выбор. Попробуй снова.');
+            }
+        } while (userChoice !== '1' && userChoice !== '2' && userChoice !== '3' && userChoice !== '4');
+
+
+
+        switch (userChoice) {
+            case '1':
+                console.log('-----\nХод героя MJay\n-----');
+                gameplayMJay();
+                break;
+            case '2':
+                if (Hero.magicSlots.quantity > 0) {
+                    Enemy.changeHP(Hero.getMagicMissileDamage());
+                    console.log(`Нанесено урона ${Hero.getMagicMissileDamage()}`);
+                    Enemy.getStatus();
+                    Hero.magicSlots.quantity--;
+                    if (Hero.magicSlots.quantity === 0) {
+                        delete Hero.magicSlots;
+                        console.log(`У героя не осталось заклинаний`);
+                    }
+                } else {
+                    console.log(`Заклинания закончились!`);
+                }
+                break;
+            case '3':
+                console.log('Герой слушает барда...');
+                break;
+            case '4':
+                console.log('Герой решил сбежать! 🏃‍♂️💨');
+                break
+            default:
+                break;
+        }
+
+        console.log('-----\nХод противника MaZaHaKeR\n-----');
+        if (gameplayMaZaHaKeR()) break;
+
+        console.log('================================');
     }
+
 </script>
 </body>
 </html>

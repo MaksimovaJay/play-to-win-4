@@ -63,14 +63,7 @@
         }
     };
 
-     const gameplayMJay = () => {
-         const resultHeroAttack = Dice.d20() + Hero.attackBonus
-         console.log(`Попытка атаки  MJay равна ${resultHeroAttack}`)
-
-
-     }
-
-    while (true) {
+    const gameplayMJay = () => {
         const resultHeroAttack = Dice.d20() + Hero.attackBonus
         console.log(`Попытка атаки  MJay равна ${resultHeroAttack}`)
 
@@ -79,13 +72,16 @@
             Enemy.changeHP(damageHero)
             Enemy.getStatus()
             if (Enemy.hitPoints <= 0) {
-                console.log(`MJay победил`)
-                break
+                console.log(`🏆 MJay победил`)
+                return true
             }
         } else {
-            console.log(`MJay не попал по противнику`)
+            console.log(`MJay не попал ❌ по противнику`)
         }
+        return false
+    }
 
+    const gameplayMaZaHaKeR = () => {
         if (Enemy.hitPoints !== 0) {
             const resultEnemyAttack = Dice.d20() + Enemy.attackBonus
             console.log(`Попытка атаки MaZaHaKeR равна ${resultEnemyAttack}`)
@@ -94,16 +90,24 @@
                 let damageEnemy = Dice.d6()
                 Hero.changeHP(damageEnemy)
                 Hero.getStatus()
-            }  if (Hero.hitPoints <= 0) {
-                console.log(`MaZaHaKeR победил`)
-                break
+            }
+            if (Hero.hitPoints <= 0) {
+                console.log(`🏆MaZaHaKeR победил`)
+                return true
             }
         } else {
-            console.log(`MaZaHaKeR не попал по противнику`)
+            console.log(`MaZaHaKeR не ❌ попал по противнику`)
         }
+        return false
+    }
 
 
-
+    while (true) {
+         const userСhoice = prompt(`Выберите что герой будет делать`)
+        console.log(' -----\nХод противника MJay\n -----')
+        if (gameplayMJay()) break
+        console.log(' -----\nХод противника MaZaHaKeR\n -----')
+        if (gameplayMaZaHaKeR()) break
         console.log('================================')
     }
 </script>

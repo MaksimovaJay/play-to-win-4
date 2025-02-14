@@ -12,8 +12,8 @@
         hitPoints: 25,
         armorClass: 12,
         attackBonus: 5,
-        magicSlots:  {
-            name:'2 - Волшебная стрела',
+        magicSlots: {
+            name: '2 - Волшебная стрела',
             quantity: 2
         },
         getStatus: function () {
@@ -108,54 +108,74 @@
         return false
     }
 
+    let validChoices = ['1', '2', '3', '4'];
 
+    const bardMessages = [
+        "Слушай, герой, путь твой труден, но впереди — слава и богатство!",
+        "Верь в себя, ведь даже самые темные ночи заканчиваются рассветом!",
+        "Мир полон тайн, и на каждом шагу скрываются чудеса и опасности.",
+        "Знаешь ли ты, что леса в этом краю полны забытых древностей?",
+        "О, я чувствую, как тронул тебя мой стих! Или это просто твои шлем и доспехи так блестят?",
+        "Герой, ты когда-нибудь видел что-то более удивительное, чем твоя собственная тень?",
+        "Впереди тебя ждет великая битва, но помни: даже победитель имеет право на отдых.",
+        "Я предсказываю, что через несколько дней ты найдешь что-то важное, может быть... целый сундук золота!",
+        "Сила — не всегда ключ к победе. Иногда спокойствие и разум важнее.",
+        "Каждый шаг на пути к великой цели — это шаг к самому себе.",
+        "Не сдавайся, ведь ты намного сильнее, чем ты сам себе кажешься!",
+        "Каждое испытание — это возможность стать лучше. Дерзай!"
+    ];
+    const getRandomBardMessage = () => {
+        const randomMessage = Math.floor(Math.random() * bardMessages.length);
+        return bardMessages[randomMessage];
+    }
 
     while (true) {
-        let userChoice;
-
-        do {
-            userChoice = prompt(`Выберите действие героя:\n1 - Атаковать\n${Hero.magicSlots ? Hero.magicSlots.name : 'Волшебная стрела (заклинания закончились)'}\n3 - Слушать барда\n4 - Убежать\n\nУкажи цифру:`);
-
-            if (userChoice !== '1' && userChoice !== '2' && userChoice !== '3' && userChoice !== '4') {
-                console.log('Некорректный выбор. Попробуй снова.');
-            }
-        } while (userChoice !== '1' && userChoice !== '2' && userChoice !== '3' && userChoice !== '4');
-
-
-
-        switch (userChoice) {
-            case '1':
-                console.log('-----\nХод героя MJay\n-----');
-                gameplayMJay();
-                break;
-            case '2':
-                if (Hero.magicSlots.quantity > 0) {
-                    Enemy.changeHP(Hero.getMagicMissileDamage());
-                    console.log(`Нанесено урона ${Hero.getMagicMissileDamage()}`);
-                    Enemy.getStatus();
-                    Hero.magicSlots.quantity--;
-                    if (Hero.magicSlots.quantity === 0) {
-                        delete Hero.magicSlots;
-                        console.log(`У героя не осталось заклинаний`);
+        let userChoice = prompt(`Выберите действие героя:\n1 - Атаковать\n${Hero.magicSlots ? Hero.magicSlots.name : ''}\n3 - Слушать барда\n4 - Убежать\n\nУкажи цифру:`);
+        if (userChoice === null) {
+            break
+        } else if (validChoices.includes(userChoice)) {
+            let skipEnemyTurn = false;
+            switch (userChoice) {
+                case '1':
+                    console.log('-----\nХод героя MJay\n-----');
+                    gameplayMJay();
+                    break;
+                case '2':
+                    console.log('-----\nХод героя MJay\n-----');
+                    if (Hero.magicSlots.quantity > 0) {
+                        Enemy.changeHP(Hero.getMagicMissileDamage());
+                        console.log(`Нанесено урона ${Hero.getMagicMissileDamage()}`);
+                        Enemy.getStatus();
+                        Hero.magicSlots.quantity--;
+                        if (Hero.magicSlots.quantity === 0) {
+                            delete Hero.magicSlots;
+                            console.log(`У героя не осталось заклинаний`);
+                        }
+                    } else {
+                        console.log(`Заклинания закончились!`);
                     }
-                } else {
-                    console.log(`Заклинания закончились!`);
-                }
-                break;
-            case '3':
-                console.log('Герой слушает барда...');
-                break;
-            case '4':
-                console.log('Герой решил сбежать! 🏃‍♂️💨');
-                break
-            default:
-                break;
+                    break;
+                case '3':
+                    console.log(`${getRandomBardMessage()}`);
+                    skipEnemyTurn = true
+                    break;
+                case '4':
+
+                    console.log('Герой решил сбежать! 🏃‍♂️💨');
+                    break
+                default:
+                    break;
+            }
+            if (!skipEnemyTurn) {
+                console.log('-----\nХод противника MaZaHaKeR\n-----');
+                if (gameplayMaZaHaKeR()) break;
+            }
+
+
+            console.log('================================');
+        } else {
+            console.log(' Некорректный ввод')
         }
-
-        console.log('-----\nХод противника MaZaHaKeR\n-----');
-        if (gameplayMaZaHaKeR()) break;
-
-        console.log('================================');
     }
 
 </script>
